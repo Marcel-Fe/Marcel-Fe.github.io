@@ -48,7 +48,7 @@ function KartModelStatic({ pet, upg }: { pet: Pet; upg: UpgradeLevels }) {
         {/* Modell blickt nach +Z (Fahrtrichtung) */}
         <primitive object={model} scale={2.4} />
         <group scale={2.4}>
-          <group position={[seat.x, seat.y + 0.05, seat.z]} scale={0.78}>
+          <group position={[seat.x, seat.y + 0.08, seat.z]} scale={0.9}>
             <PetFigure earType={pet.earType} color={pet.color} />
           </group>
         </group>

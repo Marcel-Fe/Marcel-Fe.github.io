@@ -90,7 +90,7 @@ export const KartModel = forwardRef<THREE.Group, Props>(({ path, color, earType,
         <primitive object={model} scale={2.4} rotation={[0, 0, 0]} position={[0, 0, 0]} />
         {/* Tier-Figur an der Sitzposition (ersetzt generische Figur) */}
         <group scale={2.4}>
-          <group position={[seat.x, seat.y + 0.05, seat.z]} scale={0.78}>
+          <group position={[seat.x, seat.y + 0.08, seat.z]} scale={0.9}>
             <PetFigure earType={earType} color={color} />
           </group>
         </group>

@@ -41,4 +41,4 @@ export interface RaceResult {
   coins: number
 }
 
-export type Screen = 'menu' | 'race' | 'result' | 'petprofile' | 'garage' | 'dailies' | 'eggs'
+export type Screen = 'menu' | 'race' | 'result' | 'petprofile' | 'garage' | 'dailies' | 'eggs' | 'shop'

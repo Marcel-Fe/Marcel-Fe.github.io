@@ -864,3 +864,280 @@ body {
 .pet-chip.locked:active {
   transform: none;
 }
+
+/* ===================== MENÜ-REDESIGN ===================== */
+.menu .topbar {
+  justify-content: space-between;
+}
+.menu .currency {
+  font-size: 16px;
+  padding: 8px 16px;
+}
+
+/* Logo-Leiste */
+.hero-bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  max-width: 460px;
+}
+.hero-logo {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  box-shadow: 0 0 24px rgba(63, 169, 255, 0.5);
+}
+.hero-title {
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  line-height: 1;
+  color: #fff;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.4);
+}
+.hero-title span {
+  color: #ffb43f;
+}
+
+/* Sektions-Köpfe */
+.section-head {
+  width: 100%;
+  max-width: 460px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 6px;
+}
+.section-head h2 {
+  font-size: 19px;
+  margin: 0;
+}
+.link-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* Welten als Bild-Karten */
+.world-strip {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  width: 100%;
+  max-width: 460px;
+  padding: 4px 2px 8px;
+  scrollbar-width: none;
+}
+.world-strip::-webkit-scrollbar {
+  display: none;
+}
+.world-card {
+  position: relative;
+  flex: 0 0 150px;
+  background: var(--panel);
+  border: 2px solid transparent;
+  border-radius: 18px;
+  padding: 0;
+  overflow: hidden;
+  cursor: pointer;
+  color: var(--text);
+  transition: transform 0.12s;
+}
+.world-card.active {
+  transform: translateY(-3px);
+}
+.world-card-img {
+  height: 96px;
+  display: grid;
+  place-items: center;
+}
+.world-card-emoji {
+  font-size: 46px;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.5));
+}
+.world-card-foot {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 8px 10px 10px;
+}
+.world-card-foot .world-name {
+  font-size: 14px;
+  font-weight: 700;
+}
+.diff-badge {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 999px;
+  color: #14163a;
+}
+.lock-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(8, 12, 30, 0.66);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  backdrop-filter: blur(1px);
+}
+.lock-ico {
+  font-size: 26px;
+}
+.lock-txt {
+  font-size: 12px;
+  font-weight: 800;
+  color: #ffd36b;
+}
+.sel-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  background: #36e07a;
+  color: #06210f;
+  font-weight: 900;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Pet-Detailkarte (ohne große Emoji-Box, Bild kommt aus 3D-Vorschau) */
+.pet-card-info {
+  text-align: center;
+}
+.badge-row {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+/* Pet-Auswahl: gesperrte sind antippbar (führen zu Eiern) */
+.pet-chip.locked {
+  opacity: 0.7;
+  cursor: pointer;
+}
+.pet-chip.locked .pet-emoji {
+  opacity: 0.9;
+}
+
+/* Aktions-Buttons als Grid */
+.action-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  width: 100%;
+  max-width: 460px;
+}
+.action-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 6px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: linear-gradient(180deg, var(--panel-2), var(--panel));
+  color: var(--text);
+  cursor: pointer;
+}
+.action-btn:active {
+  transform: translateY(2px);
+}
+.action-ico {
+  font-size: 24px;
+}
+.action-lbl {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* Start-Button extra präsent */
+.start-cta {
+  margin-top: 4px;
+  background: linear-gradient(180deg, #ffd24a, #ff9a1f);
+  color: #3a1c00;
+  box-shadow: 0 8px 0 #b86a00, 0 12px 28px rgba(255, 154, 31, 0.55);
+  font-size: 20px;
+}
+.start-cta:active {
+  box-shadow: 0 5px 0 #b86a00;
+}
+.start-cta:disabled {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--muted);
+  box-shadow: none;
+}
+
+/* ===================== SHOP ===================== */
+.shop-currencies {
+  display: flex;
+  gap: 8px;
+}
+.shop-section {
+  width: 100%;
+  max-width: 460px;
+}
+.shop-note {
+  margin: 2px 0 8px;
+}
+.shop-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.shop-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 4px;
+  padding: 12px 8px;
+  border-radius: 16px;
+  border: 2px solid transparent;
+  background: linear-gradient(180deg, var(--panel-2), var(--panel));
+}
+.shop-emoji {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  font-size: 28px;
+}
+.shop-name {
+  font-size: 14px;
+  font-weight: 800;
+}
+.shop-desc {
+  font-size: 11px;
+  color: var(--muted);
+  min-height: 28px;
+}
+.shop-buy {
+  width: 100%;
+  padding: 8px;
+  font-size: 13px;
+  opacity: 0.95;
+}
+.shop-buy:disabled {
+  opacity: 0.9;
+  color: #06122b;
+  cursor: default;
+}
+.shop-soon {
+  font-size: 10px;
+  color: var(--muted);
+}

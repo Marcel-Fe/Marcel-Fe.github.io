@@ -6,6 +6,7 @@ import { PetProfile } from './screens/PetProfile'
 import { Garage } from './screens/Garage'
 import { DailyTasks } from './screens/DailyTasks'
 import { PetEggs } from './screens/PetEggs'
+import { Shop } from './screens/Shop'
 
 export default function App() {
   const screen = useGameStore((s) => s.screen)
@@ -19,6 +20,7 @@ export default function App() {
       {screen === 'garage' && <Garage />}
       {screen === 'dailies' && <DailyTasks />}
       {screen === 'eggs' && <PetEggs />}
+      {screen === 'shop' && <Shop />}
     </div>
   )
 }

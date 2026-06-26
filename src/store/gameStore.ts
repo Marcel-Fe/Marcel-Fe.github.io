@@ -18,6 +18,7 @@ interface GameState {
   selectedPetId: string
   selectedTrackId: string
   coins: number
+  diamonds: number
   totalPoints: number
   petXp: Record<string, number> // Gesamt-XP je Pet
   upgrades: Record<string, number> // Bereich -> gekaufte Stufe
@@ -46,6 +47,7 @@ export const useGameStore = create<GameState>()(
       selectedPetId: 'fynnox',
       selectedTrackId: 'fluesterwald',
       coins: 0,
+      diamonds: 0,
       totalPoints: 0,
       petXp: {},
       upgrades: {},
@@ -137,6 +139,7 @@ export const useGameStore = create<GameState>()(
         selectedPetId: state.selectedPetId,
         selectedTrackId: state.selectedTrackId,
         coins: state.coins,
+        diamonds: state.diamonds,
         totalPoints: state.totalPoints,
         petXp: state.petXp,
         upgrades: state.upgrades,
