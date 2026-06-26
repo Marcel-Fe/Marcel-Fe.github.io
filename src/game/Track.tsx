@@ -21,11 +21,11 @@ function useScatter(curve: TrackCurve): Deco[] {
   return useMemo(() => {
     const out: Deco[] = []
     const n = curve.samples.length
-    for (let i = 0; i < n; i += 9) {
+    for (let i = 0; i < n; i += 6) {
       const p = curve.samples[i]
       const nor = curve.normals[i]
       for (const side of [1, -1]) {
-        const dist = 12 + Math.random() * 26
+        const dist = 11 + Math.random() * 34
         out.push({
           x: p.x + nor.x * dist * side,
           z: p.z + nor.z * dist * side,
