@@ -1,0 +1,44 @@
+export type Rarity = 'Common' | 'Rare' | 'Epic' | 'Legendary'
+
+export type EarType = 'fox' | 'panda' | 'rabbit' | 'cat' | 'dragon'
+
+export interface Pet {
+  id: string
+  name: string
+  emoji: string
+  role: string
+  rarity: Rarity
+  color: string // kart body color
+  image?: string // path to character portrait PNG (fallback: emoji)
+  model: string // path to GLB kart model
+  earType: EarType // shape of the animal figure
+  speed: number // 1..10 -> affects max speed
+  control: number // 1..10 -> affects steering/grip
+  ability: string
+  personality: string
+}
+
+export interface AIStyle {
+  name: string
+  speedFactor: number // multiplier on max speed
+  skill: number // 0..1 how well it sticks to the racing line
+  aggression: number // 0..1 how much it drifts/boosts
+}
+
+export interface RaceResultEntry {
+  id: string
+  name: string
+  emoji: string
+  isPlayer: boolean
+  rank: number
+  laps: number
+}
+
+export interface RaceResult {
+  entries: RaceResultEntry[]
+  playerRank: number
+  points: number
+  coins: number
+}
+
+export type Screen = 'menu' | 'race' | 'result' | 'petprofile' | 'garage' | 'dailies' | 'eggs'

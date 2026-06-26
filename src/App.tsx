@@ -1,0 +1,24 @@
+import { useGameStore } from './store/gameStore'
+import { MainMenu } from './screens/MainMenu'
+import { RaceScreen } from './screens/RaceScreen'
+import { ResultScreen } from './screens/ResultScreen'
+import { PetProfile } from './screens/PetProfile'
+import { Garage } from './screens/Garage'
+import { DailyTasks } from './screens/DailyTasks'
+import { PetEggs } from './screens/PetEggs'
+
+export default function App() {
+  const screen = useGameStore((s) => s.screen)
+
+  return (
+    <div className="app">
+      {screen === 'menu' && <MainMenu />}
+      {screen === 'race' && <RaceScreen />}
+      {screen === 'result' && <ResultScreen />}
+      {screen === 'petprofile' && <PetProfile />}
+      {screen === 'garage' && <Garage />}
+      {screen === 'dailies' && <DailyTasks />}
+      {screen === 'eggs' && <PetEggs />}
+    </div>
+  )
+}
