@@ -19,7 +19,8 @@ export default defineConfig({
         theme_color: '#0a1030',
         background_color: '#0a1030',
         display: 'standalone',
-        orientation: 'portrait',
+        // Beide Orientierungen erlauben: Menü ist Hochformat, im Rennen kann quer gedreht werden.
+        orientation: 'any',
         start_url: '/kart-pets/',
         scope: '/kart-pets/',
         icons: [

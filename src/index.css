@@ -1756,3 +1756,38 @@ body::before {
   margin: 0 auto;
   filter: drop-shadow(0 12px 12px rgba(0, 0, 0, 0.5));
 }
+
+/* Querformat-Hinweis im Rennen (nur im Hochformat sichtbar) */
+.rotate-hint {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 40;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  max-width: 80%;
+  text-align: center;
+  padding: 16px 22px;
+  border-radius: 18px;
+  background: rgba(10, 14, 40, 0.82);
+  border: 1px solid rgba(120, 145, 230, 0.4);
+  color: var(--text);
+  font-weight: 800;
+  font-size: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(3px);
+}
+.rotate-ico {
+  font-size: 40px;
+  animation: rotate-wiggle 1.6s ease-in-out infinite;
+}
+@keyframes rotate-wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-22deg); }
+  60% { transform: rotate(90deg); }
+  80% { transform: rotate(78deg); }
+}

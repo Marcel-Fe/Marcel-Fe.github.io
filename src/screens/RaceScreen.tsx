@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { RaceScene } from '../game/RaceScene'
 import { Hud } from '../ui/Hud'
@@ -29,6 +29,11 @@ export function RaceScreen() {
   const opponents = PETS.filter((p) => p.id !== selectedPetId).slice(0, 3)
   const track = getTrack(selectedTrackId)
 
+  // Hochformat-Hinweis: nur zeigen, wenn das Gerät gerade im Hochformat ist.
+  const [portrait, setPortrait] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia('(orientation: portrait)').matches,
+  )
+
   useEffect(() => {
     resetControls()
     useHudStore.getState().set({ countdown: -1, lap: 1, totalLaps: track.laps })
@@ -38,6 +43,24 @@ export function RaceScreen() {
       resetControls()
     }
   }, [track.laps])
+
+  // Querformat fürs Rennen: best-effort sperren (funktioniert nur als installierte PWA /
+  // in manchen Browsern); sonst kann der Spieler das Handy manuell drehen.
+  useEffect(() => {
+    const so = (screen as unknown as { orientation?: { lock?: (o: string) => Promise<void>; unlock?: () => void } }).orientation
+    so?.lock?.('landscape').catch(() => {})
+    const mq = window.matchMedia('(orientation: portrait)')
+    const onChange = (e: MediaQueryListEvent) => setPortrait(e.matches)
+    mq.addEventListener('change', onChange)
+    return () => {
+      mq.removeEventListener('change', onChange)
+      try {
+        so?.unlock?.()
+      } catch {
+        /* ignore */
+      }
+    }
+  }, [])
 
   return (
     <div className="race-screen">
@@ -61,6 +84,12 @@ export function RaceScreen() {
       </Canvas>
       <Hud />
       <TouchControls />
+      {portrait && (
+        <div className="rotate-hint">
+          <span className="rotate-ico">📱↻</span>
+          <span>Drehe dein Handy quer für das volle Fahrerlebnis</span>
+        </div>
+      )}
     </div>
   )
 }
