@@ -45,7 +45,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 14px 16px calc(14px + env(safe-area-inset-bottom));
+  padding: calc(20px + env(safe-area-inset-top)) 16px calc(14px + env(safe-area-inset-bottom));
   overflow-y: auto;
   gap: 12px;
 }
@@ -1755,6 +1755,59 @@ body::before {
   display: block;
   margin: 0 auto;
   filter: drop-shadow(0 12px 12px rgba(0, 0, 0, 0.5));
+}
+
+/* Garage-Bühne: Kart-Render auf Podest (statt Low-Poly-3D) */
+.garage-stage {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+  height: 240px;
+  display: grid;
+  place-items: center;
+  border-radius: 22px;
+  overflow: hidden;
+  background: radial-gradient(120% 90% at 50% 15%, #20296b 0%, #0c1234 72%);
+  border: 1px solid rgba(130, 155, 235, 0.22);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+.garage-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.garage-disc {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 220px;
+  height: 38px;
+  border-radius: 50%;
+  filter: blur(3px);
+  opacity: 0.75;
+}
+.garage-kart-img {
+  position: relative;
+  z-index: 1;
+  max-width: 86%;
+  max-height: 200px;
+  object-fit: contain;
+  filter: drop-shadow(0 16px 16px rgba(0, 0, 0, 0.55));
+  animation: garage-float 3.2s ease-in-out infinite;
+}
+@keyframes garage-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-9px); }
+}
+.garage-kart-name {
+  text-align: center;
+  font-size: 18px;
+}
+.garage-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 /* Querformat-Hinweis im Rennen (nur im Hochformat sichtbar) */

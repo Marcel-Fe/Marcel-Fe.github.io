@@ -1,7 +1,7 @@
 import { forwardRef, useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import { useGLTF } from '@react-three/drei'
-import { useFrame } from '@react-three/fiber'
+import { useFrame, useLoader } from '@react-three/fiber'
 import { PETS } from '../data/pets'
 import { PetFigure } from './PetFigure'
 import { asset } from '../utils/asset'
@@ -12,15 +12,30 @@ interface Props {
   path: string
   color: string
   earType: EarType
+  cutImage?: string
   kart: KartState
 }
 
 const SPARK_LOW = new THREE.Color('#ffae3f')
 const SPARK_HIGH = new THREE.Color('#7fd0ff')
 
+// Ganzes gerendertes Kart als 2D-Sprite (2.5D-Look wie klassische Mobile-Racer) –
+// sieht aus wie auf den Bildern, statt Low-Poly-Modell + Primitiven-Figur.
+function RaceCharSprite({ url }: { url: string }) {
+  const tex = useLoader(THREE.TextureLoader, asset(url))
+  tex.colorSpace = THREE.SRGBColorSpace
+  const aspect = tex.image ? tex.image.width / tex.image.height : 0.83
+  const h = 3.0
+  return (
+    <sprite position={[0, h * 0.46, 0]} scale={[h * aspect, h, 1]}>
+      <spriteMaterial map={tex} transparent alphaTest={0.35} depthWrite={false} />
+    </sprite>
+  )
+}
+
 // Lädt ein echtes GLB-Kart-Modell (Kenney Car Kit, CC0) und ergänzt
 // Effekte: Boost-Flamme, Drift-Funken, Unterboden-Glow in Pet-Farbe.
-export const KartModel = forwardRef<THREE.Group, Props>(({ path, color, earType, kart }, ref) => {
+export const KartModel = forwardRef<THREE.Group, Props>(({ path, color, earType, cutImage, kart }, ref) => {
   const { scene } = useGLTF(asset(path))
   const { model, seat } = useMemo(() => {
     const clone = scene.clone(true)
@@ -87,14 +102,26 @@ export const KartModel = forwardRef<THREE.Group, Props>(({ path, color, earType,
   return (
     <group ref={ref}>
       <group>
-        {/* Modell blickt nach +Z (= Fahrtrichtung), nur skalieren */}
-        <primitive object={model} scale={2.4} rotation={[0, 0, 0]} position={[0, 0, 0]} />
-        {/* Tier-Figur an der Sitzposition (ersetzt generische Figur) */}
-        <group scale={2.4}>
-          <group position={[seat.x, seat.y + 0.08, seat.z]} scale={0.9}>
-            <PetFigure earType={earType} color={color} />
-          </group>
-        </group>
+        {cutImage ? (
+          <>
+            {/* Boden-Schatten zur Erdung des Sprites */}
+            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.05, 0]}>
+              <circleGeometry args={[1.15, 24]} />
+              <meshBasicMaterial color="#000000" transparent opacity={0.3} depthWrite={false} />
+            </mesh>
+            <RaceCharSprite url={cutImage} />
+          </>
+        ) : (
+          <>
+            {/* Fallback: Low-Poly-Modell blickt nach +Z (= Fahrtrichtung) */}
+            <primitive object={model} scale={2.4} rotation={[0, 0, 0]} position={[0, 0, 0]} />
+            <group scale={2.4}>
+              <group position={[seat.x, seat.y + 0.08, seat.z]} scale={0.9}>
+                <PetFigure earType={earType} color={color} />
+              </group>
+            </group>
+          </>
+        )}
       </group>
 
       {/* Unterboden-Glow in Pet-Farbe */}

@@ -296,6 +296,7 @@ export function RaceScene({ track, playerPet, playerLevel, playerUpgrades, oppon
             path={k.pet.model}
             color={k.color}
             earType={k.pet.earType}
+            cutImage={k.pet.cutImage}
             kart={k}
           />
         ))}

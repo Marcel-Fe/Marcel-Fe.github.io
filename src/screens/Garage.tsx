@@ -1,7 +1,7 @@
 import { useGameStore } from '../store/gameStore'
 import { StatBar } from '../ui/StatBar'
-import { KartPreview } from '../ui/KartPreview'
 import { getPet } from '../data/pets'
+import { asset } from '../utils/asset'
 import { UPGRADES, effectFor, costFor } from '../data/upgrades'
 
 function pctText(factor: number): string {
@@ -16,12 +16,20 @@ export function Garage() {
   const selectedPetId = useGameStore((s) => s.selectedPetId)
 
   const pet = getPet(selectedPetId)
-  const upgradeLevels = {
+  const lv = {
     motor: upgrades.motor ?? 0,
     reifen: upgrades.reifen ?? 0,
     booster: upgrades.booster ?? 0,
     panzer: upgrades.panzer ?? 0,
   }
+
+  // Anzeige-Werte (kein Physik-Einfluss): Pet-Basis + gekaufte Upgrades.
+  const stats = [
+    { label: 'Tempo', value: Math.min(10, pet.speed + lv.motor * 0.5), color: '#ff7a2f' },
+    { label: 'Antritt', value: Math.min(10, 5 + lv.booster * 0.9), color: '#b56bff' },
+    { label: 'Handling', value: Math.min(10, pet.control + lv.reifen * 0.5), color: '#3fc1ff' },
+    { label: 'Schutz', value: Math.min(10, 3 + lv.panzer * 1.2), color: '#36e07a' },
+  ]
 
   return (
     <div className="screen garage">
@@ -30,14 +38,36 @@ export function Garage() {
           ‹ Zurück
         </button>
         <div className="currency">
-          <span className="coin">🪙</span> {coins}
+          <span className="coin">🪙</span> <span className="cur-val">{coins}</span>
         </div>
       </div>
 
       <h2 className="section-title">🔧 Kart-Garage</h2>
 
-      <KartPreview pet={pet} upgrades={upgradeLevels} />
-      <p className="hint preview-hint">{pet.name}s Kart dreht sich – gekaufte Upgrades sind sichtbar.</p>
+      {/* Kart-Held wie auf den Bildern (freigestelltes Render statt Low-Poly-3D) */}
+      <div className="garage-stage">
+        <div
+          className="garage-glow"
+          style={{ background: `radial-gradient(circle at 50% 44%, ${pet.color}55, transparent 66%)` }}
+        />
+        <div
+          className="garage-disc"
+          style={{ background: `radial-gradient(ellipse at 50% 50%, ${pet.color}cc, ${pet.color}22 60%, transparent)` }}
+        />
+        {pet.cutImage || pet.image ? (
+          <img className="garage-kart-img" src={asset((pet.cutImage ?? pet.image)!)} alt={pet.name} />
+        ) : (
+          <span className="pet-hero-emoji">{pet.emoji}</span>
+        )}
+      </div>
+      <div className="pet-card-name garage-kart-name">{pet.name}s Kart</div>
+
+      {/* Kart-Werte */}
+      <div className="pet-card garage-stats">
+        {stats.map((s) => (
+          <StatBar key={s.label} label={s.label} value={s.value} color={s.color} />
+        ))}
+      </div>
 
       <p className="hint swipe-hint">← zur Seite wischen für alle Teile →</p>
       <div className="upgrade-strip">
