@@ -21,18 +21,24 @@ function useScatter(curve: TrackCurve): Deco[] {
   return useMemo(() => {
     const out: Deco[] = []
     const n = curve.samples.length
-    for (let i = 0; i < n; i += 6) {
+    // Mehrere gestaffelte Bänder je Streckenseite → dichte Kulisse statt Einzelbäume.
+    const bands = [9, 16, 24, 36]
+    for (let i = 0; i < n; i += 3) {
       const p = curve.samples[i]
       const nor = curve.normals[i]
       for (const side of [1, -1]) {
-        const dist = 11 + Math.random() * 34
-        out.push({
-          x: p.x + nor.x * dist * side,
-          z: p.z + nor.z * dist * side,
-          s: 0.7 + Math.random() * 1.1,
-          rot: Math.random() * Math.PI * 2,
-          variant: Math.floor(Math.random() * 3),
-        })
+        for (const base of bands) {
+          const dist = base + Math.random() * 8
+          // weiter außen seltener, damit es nicht zu schwer wird
+          if (base > 30 && i % 6 !== 0) continue
+          out.push({
+            x: p.x + nor.x * dist * side + (Math.random() - 0.5) * 6,
+            z: p.z + nor.z * dist * side + (Math.random() - 0.5) * 6,
+            s: 0.7 + Math.random() * 1.3,
+            rot: Math.random() * Math.PI * 2,
+            variant: Math.floor(Math.random() * 3),
+          })
+        }
       }
     }
     return out
@@ -51,35 +57,63 @@ const CANDY_COLORS = ['#ff5db0', '#8f6bff', '#3fc1ff', '#ffd23f', '#5be08a']
 
 function DecoItem({ d, decor }: { d: Deco; decor: string }) {
   if (decor === 'forest') {
+    const greens = ['#1d7a3a', '#268f45', '#2f9e54', '#176b33']
+    const g = greens[Math.abs(Math.round(d.x * 1.7 + d.z)) % greens.length]
+    const g2 = greens[Math.abs(Math.round(d.x + d.z * 1.3)) % greens.length]
     if (d.variant === 0)
+      // hohe, volle Tanne (4 Kegel-Schichten)
       return (
-        <group position={[d.x, 0, d.z]} scale={d.s}>
-          <mesh position={[0, 1.2, 0]} castShadow>
-            <cylinderGeometry args={[0.32, 0.42, 2.4, 8]} />
-            <meshStandardMaterial color="#6b4a2b" />
+        <group position={[d.x, 0, d.z]} scale={d.s} rotation={[0, d.rot, 0]}>
+          <mesh position={[0, 1.1, 0]} castShadow>
+            <cylinderGeometry args={[0.3, 0.42, 2.2, 7]} />
+            <meshStandardMaterial color="#5e4128" />
           </mesh>
-          <mesh position={[0, 3, 0]} castShadow>
-            <coneGeometry args={[1.6, 3, 10]} />
-            <meshStandardMaterial color="#1f7a3d" />
+          <mesh position={[0, 2.4, 0]} castShadow>
+            <coneGeometry args={[1.8, 2.8, 9]} />
+            <meshStandardMaterial color={g} roughness={0.9} />
           </mesh>
-          <mesh position={[0, 4.2, 0]} castShadow>
-            <coneGeometry args={[1.1, 2, 10]} />
-            <meshStandardMaterial color="#27914a" />
+          <mesh position={[0, 3.6, 0]} castShadow>
+            <coneGeometry args={[1.4, 2.4, 9]} />
+            <meshStandardMaterial color={g2} roughness={0.9} />
+          </mesh>
+          <mesh position={[0, 4.7, 0]} castShadow>
+            <coneGeometry args={[1.0, 2.0, 9]} />
+            <meshStandardMaterial color={g} roughness={0.9} />
           </mesh>
         </group>
       )
     if (d.variant === 1)
+      // runder Laubbaum (Stamm + büschelige Krone)
       return (
-        <mesh position={[d.x, 0.7 * d.s, d.z]} scale={d.s} castShadow>
-          <sphereGeometry args={[0.9, 12, 10]} />
-          <meshStandardMaterial color="#2f9e54" roughness={1} />
-        </mesh>
+        <group position={[d.x, 0, d.z]} scale={d.s}>
+          <mesh position={[0, 1.0, 0]} castShadow>
+            <cylinderGeometry args={[0.26, 0.36, 2.0, 7]} />
+            <meshStandardMaterial color="#6b4a2b" />
+          </mesh>
+          <mesh position={[0, 2.6, 0]} castShadow>
+            <sphereGeometry args={[1.35, 12, 11]} />
+            <meshStandardMaterial color={g} roughness={1} />
+          </mesh>
+          <mesh position={[0.7, 2.1, 0.3]} castShadow>
+            <sphereGeometry args={[0.85, 10, 9]} />
+            <meshStandardMaterial color={g2} roughness={1} />
+          </mesh>
+          <mesh position={[-0.6, 2.2, -0.3]} castShadow>
+            <sphereGeometry args={[0.8, 10, 9]} />
+            <meshStandardMaterial color={g2} roughness={1} />
+          </mesh>
+        </group>
       )
+    // niedriger Busch + Pilz-Tupfer (Bodenbewuchs)
     return (
       <group position={[d.x, 0, d.z]} scale={d.s}>
-        <mesh position={[0, 0.75, 0]}>
-          <sphereGeometry args={[0.25, 10, 8]} />
-          <meshStandardMaterial color="#ff5d8f" emissive="#ff5d8f" emissiveIntensity={0.2} />
+        <mesh position={[0, 0.5, 0]} castShadow>
+          <sphereGeometry args={[0.7, 10, 8]} />
+          <meshStandardMaterial color={g} roughness={1} />
+        </mesh>
+        <mesh position={[0.5, 0.35, 0.2]}>
+          <sphereGeometry args={[0.45, 9, 8]} />
+          <meshStandardMaterial color={g2} roughness={1} />
         </mesh>
       </group>
     )
