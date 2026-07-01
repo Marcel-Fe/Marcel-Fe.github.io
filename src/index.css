@@ -93,6 +93,10 @@ body {
   width: 100%;
   max-width: 460px;
   padding-bottom: 4px;
+  /* overflow-x:auto würde als Flex-Item sonst vertikal auf 0 schrumpfen */
+  flex-shrink: 0;
+  align-items: center;
+  min-height: 96px;
 }
 .pet-chip {
   flex: 0 0 auto;
@@ -895,6 +899,7 @@ body {
 /* Charakter-Portraits (Roster-Bilder) mit Emoji-Fallback */
 .pet-avatar {
   object-fit: cover;
+  object-position: top center; /* Kopf/Ohren behalten, unten (Körper) beschneiden */
   display: block;
 }
 .pet-avatar-chip {
@@ -1484,7 +1489,7 @@ body::before {
 }
 .hero-podest-img {
   position: relative;
-  height: 196px;
+  height: 178px;
   width: auto;
   max-width: 94%;
   object-fit: contain;

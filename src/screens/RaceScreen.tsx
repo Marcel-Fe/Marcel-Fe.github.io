@@ -70,7 +70,7 @@ export function RaceScreen() {
         camera={{ fov: 62, near: 0.1, far: 1600, position: [0, 7, -12] }}
         gl={{ antialias: true }}
         onCreated={({ gl }) => {
-          gl.toneMappingExposure = 1.24
+          gl.toneMappingExposure = 1.0
         }}
       >
         <RaceScene

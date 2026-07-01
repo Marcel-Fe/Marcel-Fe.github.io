@@ -36,10 +36,10 @@ export const TRACKS: TrackDef[] = [
     unlockAtLevel: 1,
     theme: {
       sky: 'day',
-      fog: '#cfe3ff',
-      ground: '#ffffff',
+      fog: '#bcd6f0',
+      ground: '#6fa04e',
       groundTex: 'grass',
-      road: '#cfd2e0',
+      road: '#8a8f9e',
       decor: 'forest',
       accent: '#ff5d6c',
       envPreset: 'park',

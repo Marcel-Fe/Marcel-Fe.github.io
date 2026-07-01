@@ -297,6 +297,9 @@ export function RaceScene({ track, playerPet, playerLevel, playerUpgrades, oppon
             color={k.color}
             earType={k.pet.earType}
             cutImage={k.pet.cutImage}
+            raceImage={k.pet.raceImage}
+            model3d={k.pet.model3d}
+            model3dRot={k.pet.model3dRot}
             kart={k}
           />
         ))}
@@ -310,7 +313,7 @@ export function RaceScene({ track, playerPet, playerLevel, playerUpgrades, oppon
       ))}
 
       <EffectComposer enableNormalPass={false}>
-        <Bloom intensity={1.0} luminanceThreshold={0.42} luminanceSmoothing={0.35} mipmapBlur />
+        <Bloom intensity={0.5} luminanceThreshold={0.85} luminanceSmoothing={0.3} mipmapBlur />
         <Vignette eskil={false} offset={0.22} darkness={0.6} />
       </EffectComposer>
     </>

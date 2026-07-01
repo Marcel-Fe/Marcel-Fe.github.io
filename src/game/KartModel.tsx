@@ -13,6 +13,9 @@ interface Props {
   color: string
   earType: EarType
   cutImage?: string
+  raceImage?: string
+  model3d?: string
+  model3dRot?: [number, number, number]
   kart: KartState
 }
 
@@ -33,9 +36,43 @@ function RaceCharSprite({ url }: { url: string }) {
   )
 }
 
+// Echtes 3D-Pet-GLB (Meshy/TripoSR): normalisiert Größe+Position (Box3) und richtet
+// es per Rotations-Offset in Fahrtrichtung (+Z) aus → man sieht den Rücken.
+function RacePet({ url, rot }: { url: string; rot?: [number, number, number] }) {
+  const { scene } = useGLTF(asset(url))
+  const model = useMemo(() => {
+    const clone = scene.clone(true)
+    const box = new THREE.Box3().setFromObject(clone)
+    const size = new THREE.Vector3()
+    const center = new THREE.Vector3()
+    box.getSize(size)
+    box.getCenter(center)
+    const scale = 1.3 / Math.max(size.x, size.y, size.z)
+    clone.scale.setScalar(scale)
+    // in x/z zentrieren, mit den Füßen auf y=0 (= Kart-Sitz)
+    clone.position.set(-center.x * scale, -box.min.y * scale, -center.z * scale)
+    clone.traverse((o) => {
+      const m = o as THREE.Mesh
+      if (m.isMesh) {
+        m.castShadow = true
+        m.receiveShadow = true
+      }
+    })
+    return clone
+  }, [scene])
+
+  return (
+    <group rotation={rot ?? [0, 0, 0]}>
+      <primitive object={model} />
+    </group>
+  )
+}
+
 // Lädt ein echtes GLB-Kart-Modell (Kenney Car Kit, CC0) und ergänzt
 // Effekte: Boost-Flamme, Drift-Funken, Unterboden-Glow in Pet-Farbe.
-export const KartModel = forwardRef<THREE.Group, Props>(({ path, color, earType, cutImage, kart }, ref) => {
+export const KartModel = forwardRef<THREE.Group, Props>(({ path, color, earType, cutImage, raceImage, model3d, model3dRot, kart }, ref) => {
+  // Priorität fürs Rennen: Rück-Sprite (bester Look, von hinten) > 3D-GLB > Frontal-Sprite.
+  const spriteUrl = raceImage ?? (model3d ? undefined : cutImage)
   const { scene } = useGLTF(asset(path))
   const { model, seat } = useMemo(() => {
     const clone = scene.clone(true)
@@ -102,14 +139,24 @@ export const KartModel = forwardRef<THREE.Group, Props>(({ path, color, earType,
   return (
     <group ref={ref}>
       <group>
-        {cutImage ? (
+        {spriteUrl ? (
           <>
             {/* Boden-Schatten zur Erdung des Sprites */}
             <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.05, 0]}>
               <circleGeometry args={[1.15, 24]} />
               <meshBasicMaterial color="#000000" transparent opacity={0.3} depthWrite={false} />
             </mesh>
-            <RaceCharSprite url={cutImage} />
+            <RaceCharSprite url={spriteUrl} />
+          </>
+        ) : model3d ? (
+          <>
+            {/* Echtes 3D-Pet auf dem Kenney-Kart – von hinten sichtbar */}
+            <primitive object={model} scale={2.4} rotation={[0, 0, 0]} position={[0, 0, 0]} />
+            <group scale={2.4}>
+              <group position={[seat.x, seat.y + 0.08, seat.z]}>
+                <RacePet url={model3d} rot={model3dRot} />
+              </group>
+            </group>
           </>
         ) : (
           <>
@@ -150,5 +197,9 @@ export const KartModel = forwardRef<THREE.Group, Props>(({ path, color, earType,
 
 KartModel.displayName = 'KartModel'
 
-// Alle Kart-Modelle vorab laden (kein Ruckler beim Rennstart).
-PETS.forEach((p) => useGLTF.preload(asset(p.model)))
+// Alle Kart-Modelle (und vorhandene Pet-3D-Modelle) vorab laden (kein Ruckler beim Rennstart).
+PETS.forEach((p) => {
+  useGLTF.preload(asset(p.model))
+  // Pet-GLB nur vorladen, wenn es im Rennen auch genutzt wird (kein Rück-Sprite vorhanden).
+  if (p.model3d && !p.raceImage) useGLTF.preload(asset(p.model3d))
+})
